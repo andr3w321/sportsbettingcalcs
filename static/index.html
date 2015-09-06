@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="./static/main.js"></script>
+    <script type="text/javascript" src="./static/fraction.min.js"></script>
+  </head>
+  <body>
+    <form action="" method="get">
+      <table><tr><td colspan="2" align="center">Odds Converter</td></tr>
+        <tr><td>US Odds:</td><td><input name="us_odds" onchange="convertOdds(this);" /></td></tr>
+        <tr><td>Decimal Odds:</td><td><input name="euro_odds" onchange="convertOdds(this);" /></td></tr>
+        <tr><td>Fractional Odds:</td><td><input name="fractional_odds" onchange="convertOdds(this);" /></td></tr>
+        <tr><td>Required Break Even %:</td><td><input name="win_per" onchange="convertOdds(this);" /></td></tr>
+        <tr><td></td><td><input type="button" value="Convert"/></td></tr>
+    </table>
+    </form>
+  </body>
+</html>

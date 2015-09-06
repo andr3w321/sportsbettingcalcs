@@ -14,5 +14,14 @@
         <tr><td></td><td><input type="button" value="Convert"/></td></tr>
     </table>
     </form>
+
+    <form action="" method="get">
+      <table><tr><td colspan="2" align="center">ROI Calculator</td></tr>
+        <tr><td>Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this);" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
+        <tr><td>Win %:</td><td><input name="roi_win_per" onchange="calcRoiFromWinPer(this);" /></td></tr>
+        <tr><td>ROI:</td><td><input name="roi_roi" onchange="calcWinPerFromRoi(this);" /></td></tr>
+        <tr><td></td><td><input type="button" value="Calculate"/></td></tr>
+    </table>
+    </form>
   </body>
 </html>

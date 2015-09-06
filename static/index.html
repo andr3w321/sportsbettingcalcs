@@ -17,10 +17,20 @@
 
     <form action="" method="get">
       <table><tr><td colspan="2" align="center">ROI Calculator</td></tr>
-        <tr><td>Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this);" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
+        <tr><td>Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this, 'roi_us_odds');" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
         <tr><td>Win %:</td><td><input name="roi_win_per" onchange="calcRoiFromWinPer(this);" /></td></tr>
         <tr><td>ROI:</td><td><input name="roi_roi" onchange="calcWinPerFromRoi(this);" /></td></tr>
         <tr><td></td><td><input type="button" value="Calculate"/></td></tr>
+    </table>
+    </form>
+
+    <form action="" method="get">
+      <table><tr><td colspan="2" align="center">Kelly Calculator</td></tr>
+        <tr><td>Kelly Multiplier:</td><td><input name="kelly_multiplier" onchange="calcKelly();" value="1.0" /></td><td>(1.0 is Full Kelly, 0.25 is 1/4 Kelly)</td></tr>
+        <tr><td>Decimal Odds:</td><td><input name="kelly_euro_odds" onchange="showUSOdds(this, 'kelly_us_odds');calcKelly();" value="1.9091"/></td><td><div id="kelly_us_odds">(-110.00)</div></td></tr>
+        <tr><td>Win %:</td><td><input name="kelly_win_per" onchange="calcKelly();" value="55.00%" /></td></tr>
+        <tr><td></td><td><input type="button" value="Calculate" onclick="calcKelly();"/></td></tr>
+        <tr><td>Fraction of Bankroll to Wager:</td><td><div id="kelly_fraction"></div></td></tr>
     </table>
     </form>
   </body>

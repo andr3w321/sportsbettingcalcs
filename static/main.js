@@ -1,3 +1,7 @@
+function isNumeric(num){
+    return !isNaN(num)
+}
+
 /* Odds Converter */
 function convertOdds(inputField) {
   // set euro odds
@@ -65,8 +69,8 @@ function convert_fractional_to_euro(fractional) {
 }
 
 /* ROI Calculator */
-function showUSOdds(inputField) {
-  document.getElementById('roi_us_odds').innerHTML = "(" + convert_euro_to_us(inputField.value) + ")";
+function showUSOdds(inputField, outputField) {
+  document.getElementById(outputField).innerHTML = "(" + convert_euro_to_us(inputField.value) + ")";
 }
 
 function calcRoiFromWinPer(inputField) {
@@ -83,4 +87,19 @@ function calcWinPerFromRoi(inputField) {
   var win_per = (roi + 1) / euro_odds;
   document.getElementsByName('roi_win_per')[0].value = parseFloat(win_per * 100.0).toFixed(2) + "%";
   inputField.value = parseFloat(roi * 100.0).toFixed(2) + "%";
+}
+
+/* Kelly Calculator */
+function calcKelly() {
+  var multiplier = parseFloat(document.getElementsByName('kelly_multiplier')[0].value);
+  var euro_odds = parseFloat(document.getElementsByName('kelly_euro_odds')[0].value);
+  var win_per = parseFloat(document.getElementsByName('kelly_win_per')[0].value) / 100.0;
+  if (isNumeric(multiplier) && isNumeric(euro_odds) && isNumeric(win_per)) {
+    var b = euro_odds - 1;
+    var p = win_per;
+    var q = 1 - win_per;
+    var f = (b * p - q ) / b * multiplier;
+    document.getElementById('kelly_fraction').innerHTML = parseFloat(f * 100.0).toFixed(2) + "%";
+    document.getElementsByName('kelly_win_per')[0].value = parseFloat(win_per * 100.0).toFixed(2) + "%";
+  }
 }

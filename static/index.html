@@ -33,5 +33,18 @@
         <tr><td>Fraction of Bankroll to Wager:</td><td><div id="kelly_fraction"></div></td></tr>
     </table>
     </form>
+
+    <form action="" method="get">
+      <table><tr><td colspan="3" align="center">Vig Free Calculator</td></tr>
+        <tr><td></td><td>Team A</td><td>Team B</td></tr>
+        <tr><td>Decimal Odds:</td><td><input name="vigfree_teama_euro_odds" onchange="setUsOdds(this, 'vigfree_teama_us_odds');calcVigFree();" value="1.6897" /></td><td><input name="vigfree_teamb_euro_odds" onchange="setUsOdds(this, 'vigfree_teamb_us_odds');calcVigFree();" value="2.3000" /></td></tr>
+        <tr><td>US Odds:</td><td><input name="vigfree_teama_us_odds" onchange="setEuroOdds(this, 'vigfree_teama_euro_odds');calcVigFree();" value="-145" /></td><td><input name="vigfree_teamb_us_odds" onchange="setEuroOdds(this, 'vigfree_teamb_euro_odds');calcVigFree();" value="+130" /></td></tr>
+        <tr><td></td><td><input type="button" value="Calculate" onclick="calcVigFree();"/></td></tr>
+        <tr><td>Vigorish:</td><td><div id="vigfree_viga"></div></td><td><div id="vigfree_vigb"></div></td></tr>
+        <tr><td>Implied True Win %:</td><td><div id="vigfree_teama_implied_win_per"></div></td><td><div id="vigfree_teamb_implied_win_per"></div></td></tr>
+        <tr><td>Vig Free Decimal Odds:</td><td><div id="vigfree_teama_euro_odds" /></td><td><div id="vigfree_teamb_euro_odds" /></td></tr>
+        <tr><td>Vig Free US Odds:</td><td><div id="vigfree_teama_us_odds" /></td><td><div id="vigfree_teamb_us_odds" /></td></tr>
+    </table>
+    </form>
   </body>
 </html>

@@ -1,37 +1,13 @@
-function isNumeric(num){
+function isNumeric(num) {
     return !isNaN(num)
 }
 
 /* Odds Converter */
-function convertOdds(inputField) {
-  // set euro odds
-  if (inputField.name == "us_odds") {
-    document.getElementsByName('euro_odds')[0].value = convert_us_to_euro(inputField.value);
-  } else if (inputField.name == "fractional_odds") {
-    document.getElementsByName('euro_odds')[0].value = convert_fractional_to_euro(inputField.value)
-  } else if (inputField.name == "win_per") {
-    document.getElementsByName('euro_odds')[0].value = convert_win_per_to_euro(inputField.value);
-  }
-  var euro_odds = document.getElementsByName('euro_odds')[0].value;
-
-  // then set all other odds
-  document.getElementsByName('us_odds')[0].value = convert_euro_to_us(euro_odds);
-  document.getElementsByName('fractional_odds')[0].value = convert_euro_to_fractional(euro_odds);
-  document.getElementsByName('win_per')[0].value = convert_euro_to_win_per(euro_odds);
-
-  // fix euro decimals places
-  document.getElementsByName('euro_odds')[0].value = parseFloat(document.getElementsByName('euro_odds')[0].value).toFixed(4);
-
-}
-
 function convert_euro_to_us(euro) {
   if(euro > 2)
     var us = 100 * (euro - 1);
   else
     var us = -100 / (euro - 1);
-  us = parseFloat(us).toFixed(2);
-  if (us > 0)
-    us = "+" + us;
   return us;
 }
 
@@ -68,9 +44,43 @@ function convert_fractional_to_euro(fractional) {
   return (f.n / f.d + 1);
 }
 
+function prettifyUsOdds(us) {
+  us = parseFloat(us).toFixed(2);
+  if (us > 0)
+    us = "+" + us;
+  return us;
+}
+
+function prettifyEuroOdds(euro) {
+  euro = parseFloat(euro).toFixed(4);
+  return euro;
+}
+
+function convertOdds(inputField) {
+  // set euro odds
+  if (inputField.name == "us_odds") {
+    document.getElementsByName('euro_odds')[0].value = convert_us_to_euro(inputField.value);
+  } else if (inputField.name == "fractional_odds") {
+    document.getElementsByName('euro_odds')[0].value = convert_fractional_to_euro(inputField.value)
+  } else if (inputField.name == "win_per") {
+    document.getElementsByName('euro_odds')[0].value = convert_win_per_to_euro(inputField.value);
+  }
+  var euro_odds = document.getElementsByName('euro_odds')[0].value;
+
+  // then set all other odds
+  document.getElementsByName('us_odds')[0].value = prettifyUsOdds(convert_euro_to_us(euro_odds));
+  document.getElementsByName('fractional_odds')[0].value = convert_euro_to_fractional(euro_odds);
+  document.getElementsByName('win_per')[0].value = convert_euro_to_win_per(euro_odds);
+
+  // fix euro decimals places
+  document.getElementsByName('euro_odds')[0].value = prettifyEuroOdds(document.getElementsByName('euro_odds')[0].value);
+
+}
+
+
 /* ROI Calculator */
 function showUSOdds(inputField, outputField) {
-  document.getElementById(outputField).innerHTML = "(" + convert_euro_to_us(inputField.value) + ")";
+  document.getElementById(outputField).innerHTML = "(" + prettifyUsOdds(convert_euro_to_us(inputField.value)) + ")";
 }
 
 function calcRoiFromWinPer(inputField) {
@@ -103,3 +113,56 @@ function calcKelly() {
     document.getElementsByName('kelly_win_per')[0].value = parseFloat(win_per * 100.0).toFixed(2) + "%";
   }
 }
+
+/* Vig Free Calculator */
+
+function setEuroOdds(inputField, outputField) {
+  var euro = convert_us_to_euro(inputField.value);
+  document.getElementsByName(outputField)[0].value = parseFloat(euro).toFixed(4);
+  inputField.value = prettifyUsOdds(inputField.value);
+}
+
+function setUsOdds(inputField, outputField) {
+  var us = convert_euro_to_us(inputField.value);
+  document.getElementsByName(outputField)[0].value = prettifyUsOdds(us);
+  inputField.value = prettifyEuroOdds(inputField.value);
+}
+
+function calcVigFree() {
+  var euroa = parseFloat(document.getElementsByName('vigfree_teama_euro_odds')[0].value);
+  var eurob = parseFloat(document.getElementsByName('vigfree_teamb_euro_odds')[0].value);
+
+  if (isNumeric(euroa) && isNumeric(eurob)) {
+    var breakevena = 1.0 / euroa;
+    var breakevenb = 1.0 / eurob;
+    var total_per = breakevena + breakevenb;
+    var true_win_pera = breakevena / total_per;
+    var true_win_perb = breakevenb / total_per;
+    document.getElementById('vigfree_teama_implied_win_per').innerHTML = parseFloat(true_win_pera * 100.0).toFixed(2) + "%";
+    document.getElementById('vigfree_teamb_implied_win_per').innerHTML = parseFloat(true_win_perb * 100.0).toFixed(2) + "%";
+
+    document.getElementById('vigfree_viga').innerHTML = parseFloat(true_win_pera * (euroa - 1) * 10.0).toFixed(2) + "%";
+    document.getElementById('vigfree_vigb').innerHTML = parseFloat(true_win_perb * (eurob - 1) * 10.0).toFixed(2) + "%";
+
+    var vigfree_euroa = 1.0 / true_win_pera;
+    var vigfree_eurob = 1.0 / true_win_perb;
+    document.getElementById('vigfree_teama_euro_odds').innerHTML = prettifyEuroOdds(vigfree_euroa);
+    document.getElementById('vigfree_teamb_euro_odds').innerHTML = prettifyEuroOdds(vigfree_eurob);
+
+    var vigfree_usa = convert_euro_to_us(vigfree_euroa);
+    var vigfree_usb = convert_euro_to_us(vigfree_eurob);
+
+    document.getElementById('vigfree_teama_us_odds').innerHTML = prettifyUsOdds(vigfree_usa);
+    document.getElementById('vigfree_teamb_us_odds').innerHTML = prettifyUsOdds(vigfree_usb);
+  }
+}
+
+
+
+
+
+
+
+
+
+

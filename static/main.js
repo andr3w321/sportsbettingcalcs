@@ -128,11 +128,30 @@ function setUsOdds(inputField, outputField) {
   inputField.value = prettifyEuroOdds(inputField.value);
 }
 
+function getLaidAmount(us_odds) {
+  if (us_odds > 0) {
+    return 100.0;
+  } else {
+    return Math.abs(us_odds);
+  }
+}
+
+function getPayoutAmount(us_odds) {
+  if (us_odds > 0) {
+    return Math.abs(us_odds);
+  } else {
+    return 100.0;
+  }
+}
+
 function calcVigFree() {
   var euroa = parseFloat(document.getElementsByName('vigfree_teama_euro_odds')[0].value);
   var eurob = parseFloat(document.getElementsByName('vigfree_teamb_euro_odds')[0].value);
 
-  if (isNumeric(euroa) && isNumeric(eurob)) {
+  var usa = parseFloat(document.getElementsByName('vigfree_teama_us_odds')[0].value);
+  var usb = parseFloat(document.getElementsByName('vigfree_teamb_us_odds')[0].value);
+
+  if (isNumeric(euroa) && isNumeric(eurob) && isNumeric(usa) && isNumeric(usb)) {
     var breakevena = 1.0 / euroa;
     var breakevenb = 1.0 / eurob;
     var total_per = breakevena + breakevenb;
@@ -141,8 +160,6 @@ function calcVigFree() {
     document.getElementById('vigfree_teama_implied_win_per').innerHTML = parseFloat(true_win_pera * 100.0).toFixed(2) + "%";
     document.getElementById('vigfree_teamb_implied_win_per').innerHTML = parseFloat(true_win_perb * 100.0).toFixed(2) + "%";
 
-    document.getElementById('vigfree_viga').innerHTML = parseFloat(true_win_pera * (euroa - 1) * 10.0).toFixed(2) + "%";
-    document.getElementById('vigfree_vigb').innerHTML = parseFloat(true_win_perb * (eurob - 1) * 10.0).toFixed(2) + "%";
 
     var vigfree_euroa = 1.0 / true_win_pera;
     var vigfree_eurob = 1.0 / true_win_perb;
@@ -154,6 +171,13 @@ function calcVigFree() {
 
     document.getElementById('vigfree_teama_us_odds').innerHTML = prettifyUsOdds(vigfree_usa);
     document.getElementById('vigfree_teamb_us_odds').innerHTML = prettifyUsOdds(vigfree_usb);
+
+    // vig calc
+    var total_bet = getLaidAmount(usa) + getLaidAmount(usb);
+    var viga = total_bet - getPayoutAmount(usa) - getLaidAmount(usa);
+    var vigb = total_bet - getPayoutAmount(usb) - getLaidAmount(usb);
+    var vig = ( true_win_pera * viga + true_win_perb * vigb ) / total_bet;
+    document.getElementById('vigfree_vig').innerHTML = parseFloat(vig * 100.0).toFixed(2) + "%";
   }
 }
 

@@ -192,9 +192,13 @@ function setCI(confidence_level, n, proportion) {
         // get and set the t_value
         var t_value = parseFloat(xhr.responseText);
         document.getElementById('ci_t_value').innerHTML = t_value.toFixed(2).toString();
+        
+        // set std dev
+        var std_dev = Math.sqrt(proportion * (1 - proportion) / n);
+        document.getElementById('ci_std_dev').innerHTML = parseFloat(std_dev * 100.0).toFixed(2) + "%";
 
-        // now set the confidence interval
-        var range = t_value * Math.sqrt(proportion * (1 - proportion) / n);
+        // set the confidence interval
+        var range = t_value * std_dev;
         var lower_bound = proportion - range;
         var lower_bound_str = parseFloat(lower_bound * 100.0).toFixed(2).toString() + "%";
         var upper_bound = proportion + range;

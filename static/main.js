@@ -229,4 +229,57 @@ function calcCI() {
   }
 }
 
+/* T-Test Calculator */
+function setPVal(wins, losses, pop_mean) {
+  function setErrorText(error_text) {
+    document.getElementById('ttest_results').innerHTML = error_text;
+  }
+  function setOutputText(res) {
+    if (res.indexOf(',') > -1) { 
+      var t_val = res.split(',')[0];
+      var p_val = res.split(',')[1];
+      document.getElementById('ttest_t_val').innerHTML = t_val;
+      document.getElementById('ttest_p_val').innerHTML = p_val;
+      var results = "Result is " + t_val + " standard deviations away from the mean with a p-value of " + p_val;
+      if (parseFloat(p_val) <= 0.05) {
+        results += " and may be statistically significant.";
+      } else {
+        results += " and is probably not statistically significant.";
+      }
+      document.getElementById('ttest_results').innerHTML = results;
+    } else {
+      setErrorText("Error parsing t_val and p_val");
+    }
+  }
+  var xhr = new XMLHttpRequest();
+  var url = "/t_test/" + "wins=" + wins.toString() + "&losses=" + losses.toString() + "&pop_mean=" + pop_mean.toString();
+  xhr.open("GET", url, true);
+  xhr.onload = function (e) {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        setOutputText(xhr.responseText);
+      } else {
+        setErrorText(xhr.statusText);
+      }
+    }
+  };
+  xhr.onerror = function (e) {
+    setErrorText(xhr.statusText);
+  };
+  xhr.send(null);
+}
+function calcTTest() {
+  var wins = parseInt(document.getElementsByName('ttest_wins')[0].value);
+  var losses = parseInt(document.getElementsByName('ttest_losses')[0].value);
+  var pop_mean = parseFloat(document.getElementsByName('ttest_pop_mean')[0].value) / 100.0;
+  document.getElementsByName('ttest_pop_mean')[0].value = parseFloat(pop_mean * 100.0).toFixed(2) + "%";
+  var total_bets = wins + losses;
+  document.getElementById('ttest_total_bets').innerHTML = total_bets;
+  var win_per = wins * 1.0 / total_bets;
+  document.getElementById('ttest_win_per').innerHTML = parseFloat(win_per * 100.0).toFixed(2) + "%";
+  if(isNumeric(wins) && isNumeric(losses) && isNumeric(pop_mean)) {
+    setPVal(wins, losses, pop_mean);
+  }
+}
+
 

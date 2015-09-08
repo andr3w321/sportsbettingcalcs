@@ -31,5 +31,4 @@ def t_test(wins, losses, pop_mean):
     #return "Result is a t-value of %.3f standard deviations away from the mean with a p-value of %.4f" %  (t_val, p_val)
     return "%.3f,%.4f" %  (t_val, p_val)
 
-
 run(host='localhost', port=8080)

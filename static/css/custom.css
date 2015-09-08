@@ -1,0 +1,38 @@
+table {
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+th {
+  text-align: center;
+}
+td {
+  padding: 10px;
+}
+
+.td-left-div {
+  float: left;
+}
+.td-input-div {
+  float: left;
+  padding-left: 10px;
+}
+
+.td-text-div {
+  float: left;
+  padding-left: 10px;
+  padding-top: 4px;
+}
+
+.right-align {
+  text-align: right;
+}
+
+input {
+  width: 10em;
+}
+
+.small-input {
+  width: 4em;
+}
+
+

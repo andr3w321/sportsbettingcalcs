@@ -181,12 +181,48 @@ function calcVigFree() {
   }
 }
 
+/* Confidence Interval Calculator */
+function setCI(confidence_level, n, proportion) {
+  var xhr = new XMLHttpRequest();
+  var url = "/get_t_value/" + "confidence_level=" + confidence_level.toString() + "&n=" + n.toString();
+  xhr.open("GET", url, true);
+  xhr.onload = function (e) {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        // get and set the t_value
+        var t_value = parseFloat(xhr.responseText);
+        document.getElementById('ci_t_value').innerHTML = t_value.toFixed(2).toString();
 
+        // now set the confidence interval
+        var range = t_value * Math.sqrt(proportion * (1 - proportion) / n);
+        var lower_bound = proportion - range;
+        var lower_bound_str = parseFloat(lower_bound * 100.0).toFixed(2).toString() + "%";
+        var upper_bound = proportion + range;
+        var upper_bound_str = parseFloat(upper_bound * 100.0).toFixed(2).toString() + "%";
+        document.getElementById('ci_range').innerHTML = lower_bound_str + " - " + upper_bound_str;
+      } else {
+        document.getElementById('ci_t_value').innerHTML = xhr.statusText;
+      }
+    }
+  };
+  xhr.onerror = function (e) {
+    document.getElementById('ci_t_value').innerHTML = xhr.statusText;
+  };
+  xhr.send(null);
+}
 
-
-
-
-
-
+function calcCI() {
+  var wins = parseInt(document.getElementsByName('ci_wins')[0].value);
+  var losses = parseInt(document.getElementsByName('ci_losses')[0].value);
+  var total_bets = wins + losses;
+  document.getElementById('ci_total_bets').innerHTML = total_bets;
+  var win_per = wins * 1.0 / total_bets;
+  document.getElementById('ci_win_per').innerHTML = parseFloat(win_per * 100.0).toFixed(2) + "%";
+  var confidence_level = parseFloat(document.getElementsByName('ci_level')[0].value) / 100.0;
+  document.getElementsByName('ci_level')[0].value = parseFloat(confidence_level * 100.0).toFixed(2).toString() + "%";
+  if(isNumeric(total_bets) && confidence_level > 0 && confidence_level < 1 && isNumeric(win_per)) {
+    setCI(confidence_level, total_bets, win_per);
+  }
+}
 
 

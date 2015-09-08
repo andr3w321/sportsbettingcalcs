@@ -46,5 +46,18 @@
         <tr><td>Vig Free US Odds:</td><td><div id="vigfree_teama_us_odds" /></td><td><div id="vigfree_teamb_us_odds" /></td></tr>
     </table>
     </form>
+
+    <form action="" method="get">
+      <table><tr><td colspan="4" align="center">Confidence Interval Calculator</td></tr>
+        <tr><td>Wins:</td><td><input name="ci_wins" onchange="calcCI();" value="21" /></td><td>Losses:</td><td><input name="ci_losses" onchange="calcCI();" value="39" /></td><td>(Ignore Ties)</td></tr>
+        <tr><td>Level of Confidence:</td><td><input name="ci_level" onchange="calcCI();" value="95.00%" /></td></tr>
+        <tr><td></td><td><input type="button" value="Calculate" onclick="calcCI();"/></td></tr>
+        <tr><td>Total Bets:</td><td><div id="ci_total_bets"></div></td></tr>
+        <tr><td>Win %:</td><td><div id="ci_win_per"></div></td></tr>
+        <tr><td>T-value:</td><td><div id="ci_t_value"></div></td></tr>
+        <tr><td>Win % Confidence Interval:</td><td><div id="ci_range"></div></td></tr>
+
+    </table>
+    </form>
   </body>
 </html>

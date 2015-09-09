@@ -34,11 +34,19 @@ td {
 }
 
 input {
-  width: 10em;
+  width: 6em;
 }
 
 .small-input {
-  width: 4em;
+  width: 3.5em;
+}
+
+.td-kelly-euro-odds {
+  width: 8em;
+}
+
+.td-win-loss {
+  padding-right: 0px;
 }
 
 

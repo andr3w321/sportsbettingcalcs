@@ -5,6 +5,8 @@ $(document).on('click','.navbar-collapse.in',function(e) {
     }
 });
 
+var API_URL = "http://andr3w321.pythonanywhere.com";
+
 function isNumeric(num) {
     return !isNaN(num)
 }
@@ -191,7 +193,7 @@ function calcVigFree() {
 /* Confidence Interval Calculator */
 function setCI(confidence_level, n, proportion) {
   var xhr = new XMLHttpRequest();
-  var url = "/get_t_value/" + "confidence_level=" + confidence_level.toString() + "&n=" + n.toString();
+  var url = API_URL + "/get_t_value/" + "confidence_level=" + confidence_level.toString() + "&n=" + n.toString();
   xhr.open("GET", url, true);
   xhr.onload = function (e) {
     if (xhr.readyState === 4) {
@@ -217,7 +219,7 @@ function setCI(confidence_level, n, proportion) {
     }
   };
   xhr.onerror = function (e) {
-    document.getElementById('ci_t_value').innerHTML = xhr.statusText;
+    document.getElementById('ci_t_value').innerHTML = "API Error: " + xhr.statusText;
   };
   xhr.send(null);
 }
@@ -239,7 +241,7 @@ function calcCI() {
 /* T-Test Calculator */
 function setPVal(wins, losses, pop_mean) {
   function setErrorText(error_text) {
-    document.getElementById('ttest_results').innerHTML = error_text;
+    document.getElementById('ttest_results').innerHTML = "API Error: " + error_text;
   }
   function setOutputText(res) {
     if (res.indexOf(',') > -1) { 
@@ -259,7 +261,7 @@ function setPVal(wins, losses, pop_mean) {
     }
   }
   var xhr = new XMLHttpRequest();
-  var url = "/t_test/" + "wins=" + wins.toString() + "&losses=" + losses.toString() + "&pop_mean=" + pop_mean.toString();
+  var url = API_URL + "/t_test/" + "wins=" + wins.toString() + "&losses=" + losses.toString() + "&pop_mean=" + pop_mean.toString();
   xhr.open("GET", url, true);
   xhr.onload = function (e) {
     if (xhr.readyState === 4) {

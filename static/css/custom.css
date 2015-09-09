@@ -1,7 +1,7 @@
 section {
   padding-top: 60px;
 }
-th {
+th, footer {
   text-align: center;
 }
 td {

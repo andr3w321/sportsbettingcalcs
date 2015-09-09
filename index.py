@@ -1,6 +1,20 @@
-from bottle import route, run, template, static_file, url, get
+from bottle import route, run, template, static_file, url, get, response, request
 from scipy.stats import t
 from scipy.stats import ttest_1samp
+
+# Allow requests from other domains
+def enable_cors(fn):
+    def _enable_cors(*args, **kwargs):
+        # set CORS headers
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET'
+        response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+
+        if request.method != 'OPTIONS':
+            # actual request; reply with the actual response
+            return fn(*args, **kwargs)
+
+    return _enable_cors
 
 @route('/')
 def index():
@@ -8,19 +22,21 @@ def index():
 
 @get('/static/js/<filename:re:.*\.js>')
 def javascripts(filename):
-    return static_file(filename, root='static/js')
+    return static_file(filename, root='./static/js')
 
 @get('/static/css/<filename:re:.*\.css>')
 def stylesheets(filename):
     return static_file(filename, root='./static/css')
 
-@route('/get_t_value/confidence_level=:confidence_level&n=:n')
+@route('/get_t_value/confidence_level=:confidence_level&n=:n', method=['OPTIONS', 'GET'])
+@enable_cors
 def get_t_value(confidence_level, n):
     df = int(n) - 1
     q = 1 - (1 - float(confidence_level)) / 2
     return str(t.ppf(q, df))
 
-@route('/t_test/wins=:wins&losses=:losses&pop_mean=:pop_mean')
+@route('/t_test/wins=:wins&losses=:losses&pop_mean=:pop_mean', method=['OPTIONS', 'GET'])
+@enable_cors
 def t_test(wins, losses, pop_mean):
     wins = int(wins)
     losses = int(losses)

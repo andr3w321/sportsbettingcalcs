@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sports Betting Tools</title>
+    <title>Sports Betting Calcs</title>
 
     <link href="./static/css/bootstrap.min.css" rel="stylesheet">
     <link href="./static/css/custom.css" rel="stylesheet">
@@ -17,9 +17,35 @@
     <![endif]-->
   </head>
   <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="hidden-sm"><a class="navbar-brand" href="#">SportsBettingCalcs</a></div>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="#odds_converter">Odds Converter</a></li>
+            <li><a href="#roi_calculator">ROI Calculator</a></li>
+            <li><a href="#kelly_calculator">Kelly Criterion</a></li>
+            <li><a href="#vigfree_calculator">Vig Free Line</a></li>
+            <li><a href="#ci_calculator">Confidence Interval</a></li>
+            <li><a href="#ttest_calculator">T-Test</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container-fluid">
     <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12" role="main">
+
+      <a name="odds_converter" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -30,12 +56,13 @@
             <tr><td class="right-align">Decimal Odds:</td><td><input name="euro_odds" onchange="convertOdds(this);" /></td></tr>
             <tr><td class="right-align">Fractional Odds:</td><td><input name="fractional_odds" onchange="convertOdds(this);" /></td></tr>
             <tr><td class="right-align">Required Break Even %:</td><td><input name="win_per" onchange="convertOdds(this);" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-default">Convert</button></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary">Convert</button></td></tr>
           </tbody>
         </table>
       </form>
       <hr>
 
+      <a name="roi_calculator" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -45,12 +72,13 @@
             <tr><td class="right-align">Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this, 'roi_us_odds');" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
             <tr><td class="right-align">Win %:</td><td><input name="roi_win_per" onchange="calcRoiFromWinPer(this);" /></td></tr>
             <tr><td class="right-align">ROI:</td><td><input name="roi_roi" onchange="calcWinPerFromRoi(this);" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-default">Calculate</button></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary">Calculate</button></td></tr>
           </tbody>
         </table>
       </form>
       <hr>
 
+      <a name="kelly_calculator" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -60,13 +88,14 @@
           <tr><td class="right-align">Kelly Multiplier:</td><td><div class="td-left-div"><input name="kelly_multiplier" class="small-input" onchange="calcKelly();" value="1.0" /></div><div class="td-text-div hidden-xs">(1.0 is Full Kelly, 0.25 is 1/4 Kelly)</div></td></tr>
             <tr><td class="right-align">Decimal Odds:</td><td><input name="kelly_euro_odds" onchange="showUSOdds(this, 'kelly_us_odds');calcKelly();" value="1.9091"/></td><td><div id="kelly_us_odds">(-110.00)</div></td></tr>
             <tr><td class="right-align">Win %:</td><td><input name="kelly_win_per" onchange="calcKelly();" value="55.00%" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-default" onclick="calcKelly();">Calculate</button></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcKelly();">Calculate</button></td></tr>
             <tr><td class="right-align">Fraction of Bankroll to Wager:</td><td><div id="kelly_fraction"></div></td></tr>
           </tbody>
         </table>
       </form>
       <hr>
 
+      <a name="vigfree_calculator" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -76,7 +105,7 @@
             <tr><td></td><td>Team A</td><td>Team B</td></tr>
             <tr><td class="right-align">US Odds:</td><td><input name="vigfree_teama_us_odds" onchange="setEuroOdds(this, 'vigfree_teama_euro_odds');calcVigFree();" value="-145" /></td><td><input name="vigfree_teamb_us_odds" onchange="setEuroOdds(this, 'vigfree_teamb_euro_odds');calcVigFree();" value="+130" /></td></tr>
             <tr><td class="right-align">Decimal Odds:</td><td><input name="vigfree_teama_euro_odds" onchange="setUsOdds(this, 'vigfree_teama_us_odds');calcVigFree();" value="1.6897" /></td><td><input name="vigfree_teamb_euro_odds" onchange="setUsOdds(this, 'vigfree_teamb_us_odds');calcVigFree();" value="2.3000" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-default" onclick="calcVigFree();">Calculate</button></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcVigFree();">Calculate</button></td></tr>
             <tr><td class="right-align">Vigorish:</td><td><div id="vigfree_vig"></div></td></tr>
             <tr><td class="right-align">Implied True Win %:</td><td><div id="vigfree_teama_implied_win_per"></div></td><td><div id="vigfree_teamb_implied_win_per"></div></td></tr>
             <tr><td class="right-align">Vig Free US Odds:</td><td><div id="vigfree_teama_us_odds" /></td><td><div id="vigfree_teamb_us_odds" /></td></tr>
@@ -86,6 +115,7 @@
       </form>
       <hr>
 
+      <a name="ci_calculator" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -94,7 +124,7 @@
           <tbody>
           <tr><td class="right-align">Wins:</td><td><div class="td-left-div"><input name="ci_wins" class="small-input" onchange="calcCI();" value="21" /></div><div class="td-text-div">Losses:</div><div class="td-input-div"><input name="ci_losses" class="small-input" onchange="calcCI();" value="39" /></div><div class="td-text-div hidden-xs">(Ignore Ties)</div></td></tr>
             <tr><td class="right-align">Level of Confidence:</td><td><input name="ci_level" onchange="calcCI();" value="95.00%" /></td></tr>
-            <tr><td class="right-align"></td><td><button type="button" class="btn btn-default" onclick="calcCI();">Calculate</button></td></tr>
+            <tr><td class="right-align"></td><td><button type="button" class="btn btn-primary" onclick="calcCI();">Calculate</button></td></tr>
             <tr><td class="right-align">Total Bets:</td><td><div id="ci_total_bets"></div></td></tr>
             <tr><td class="right-align">Win %:</td><td><div id="ci_win_per"></div></td></tr>
             <tr><td class="right-align">T-value:</td><td><div id="ci_t_value"></div></td></tr>
@@ -105,6 +135,7 @@
       </form>
       <hr>
 
+      <a name="ttest_calculator" class="nav-link"></a>
       <form action="" method="get">
         <table>
           <thead>
@@ -113,7 +144,7 @@
           <tbody>
           <tr><td class="right-align">Wins:</td><td><div class="td-left-div"><input name="ttest_wins" class="small-input" onchange="calcTTest();" value="40" /></div><div class="td-text-div">Losses:</div><div class="td-input-div"><input name="ttest_losses" class="small-input" onchange="calcTTest();" value="30" /></div><div class="td-text-div hidden-xs">(Ignore Ties)</div></td></tr>
             <tr><td class="right-align">Population Mean:</td><td><input name="ttest_pop_mean" onchange="calcTTest();" value="52.38%" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-default" onclick="calcTTest();">Calculate</button></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcTTest();">Calculate</button></td></tr>
             <tr><td class="right-align">Total Bets:</td><td><div id="ttest_total_bets"></div></td></tr>
             <tr><td class="right-align">Win %:</td><td><div id="ttest_win_per"></div></td></tr>
             <tr><td class="right-align">T-Value:</td><td><div id="ttest_t_val"></div></td></tr>

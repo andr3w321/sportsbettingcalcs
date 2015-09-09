@@ -1,4 +1,4 @@
-from bottle import route, run, template, static_file, url
+from bottle import route, run, template, static_file, url, get
 from scipy.stats import t
 from scipy.stats import ttest_1samp
 
@@ -6,9 +6,13 @@ from scipy.stats import ttest_1samp
 def index():
     return static_file('index.html', root='./static')
 
-@route('/static/<filename>')
-def serve_static(filename):
-    return static_file(filename, root='./static/')
+@get('/static/js/<filename:re:.*\.js>')
+def javascripts(filename):
+    return static_file(filename, root='static/js')
+
+@get('/static/css/<filename:re:.*\.css>')
+def stylesheets(filename):
+    return static_file(filename, root='./static/css')
 
 @route('/get_t_value/confidence_level=:confidence_level&n=:n')
 def get_t_value(confidence_level, n):

@@ -1,3 +1,10 @@
+// collapse navbar after click
+$(document).on('click','.navbar-collapse.in',function(e) {
+    if( $(e.target).is('a') ) {
+        $(this).collapse('hide');
+    }
+});
+
 function isNumeric(num) {
     return !isNaN(num)
 }

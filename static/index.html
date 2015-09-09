@@ -85,7 +85,7 @@
             <tr><th colspan="2" align="center">Kelly Criterion Calculator</th></tr>
           </thead>
           <tbody>
-          <tr><td class="right-align">Kelly Multiplier:</td><td colspan="2"><div class="td-left-div"><input name="kelly_multiplier" class="small-input" onchange="calcKelly();" value="1.0" /></div><div class="td-text-div hidden-xs">(1.0 is Full Kelly, 0.25 is 1/4 Kelly)</div></td></tr>
+          <tr><td class="right-align">Kelly Multiplier:</td><td colspan="2"><div class="float-left"><input name="kelly_multiplier" class="small-input" onchange="calcKelly();" value="1.0" /></div><div class="float-left pad-left td-text-div hidden-xs">(1.0 is Full Kelly, 0.25 is 1/4 Kelly)</div></td></tr>
           <tr><td class="right-align">Decimal Odds:</td><td class="td-kelly-euro-odds"><input name="kelly_euro_odds" onchange="showUSOdds(this, 'kelly_us_odds');calcKelly();" value="1.9091"/></td><td><div id="kelly_us_odds">(-110.00)</div></td></tr>
             <tr><td class="right-align">Win %:</td><td><input name="kelly_win_per" onchange="calcKelly();" value="55.00%" /></td></tr>
             <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcKelly();">Calculate</button></td></tr>
@@ -122,7 +122,16 @@
             <tr><th colspan="4" align="center">Confidence Interval Calculator</th></tr>
           </thead>
           <tbody>
-          <tr><td class="right-align">Wins:</td><td class="td-win-loss"><div class="td-left-div"><input name="ci_wins" class="small-input" onchange="calcCI();" value="21" /></div><div class="td-text-div">Losses:</div><div class="td-input-div"><input name="ci_losses" class="small-input" onchange="calcCI();" value="39" /></div><div class="td-text-div hidden-xs">(Ignore Ties)</div></td></tr>
+            <tr>
+              <td>
+                <div class="win-container">
+                  <div class="float-right pad-left"><input name="ci_wins" class="small-input" onchange="calcCI();" value="21" /></div>
+                  <div class="float-right td-text-div">Wins:</div>
+                  <div class="clear-div"></div>
+                </div>
+              </td>
+              <td class="td-win-loss"><div class="float-left td-text-div ">Losses:</div><div class="float-left pad-left"><input name="ci_losses" class="small-input" onchange="calcCI();" value="39" /></div><div class="float-left td-text-div pad-left hidden-xs">(Ignore Ties)</div></td>
+            </tr>
             <tr><td class="right-align">Level of Confidence:</td><td><input name="ci_level" onchange="calcCI();" value="95.00%" /></td></tr>
             <tr><td class="right-align"></td><td><button type="button" class="btn btn-primary" onclick="calcCI();">Calculate</button></td></tr>
             <tr><td class="right-align">Total Bets:</td><td><div id="ci_total_bets"></div></td></tr>
@@ -139,10 +148,19 @@
       <form action="" method="get">
         <table>
           <thead>
-            <tr><th colspan="4" align="center">One Sided T-Test Calculator</th></tr>
+            <tr><th class="ttest-title" colspan="2">One Sided T-Test Calculator</th></tr>
           </thead>
           <tbody>
-          <tr><td class="right-align">Wins:</td><td><div class="td-left-div"><input name="ttest_wins" class="small-input" onchange="calcTTest();" value="40" /></div><div class="td-text-div">Losses:</div><div class="td-input-div"><input name="ttest_losses" class="small-input" onchange="calcTTest();" value="30" /></div><div class="td-text-div hidden-xs">(Ignore Ties)</div></td></tr>
+            <tr>
+              <td>
+                <div class="win-container">
+                  <div class="float-right pad-left"><input name="ttest_wins" class="small-input" onchange="calcTTest();" value="40" /></div>
+                  <div class="float-right td-text-div">Wins:</div>
+                  <div class="clear-div"></div>
+                </div>
+              </td>
+              <td class="td-win-loss"><div class="float-left td-text-div ">Losses:</div><div class="float-left pad-left"><input name="ttest_losses" class="small-input" onchange="calcTTest();" value="30" /></div><div class="float-left td-text-div pad-left hidden-xs">(Ignore Ties)</div></td>
+            </tr>
             <tr><td class="right-align">Population Mean:</td><td><input name="ttest_pop_mean" onchange="calcTTest();" value="52.38%" /></td></tr>
             <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcTTest();">Calculate</button></td></tr>
             <tr><td class="right-align">Total Bets:</td><td><div id="ttest_total_bets"></div></td></tr>

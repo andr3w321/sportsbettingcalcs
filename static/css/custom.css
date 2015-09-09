@@ -15,17 +15,18 @@ td {
   padding: 10px;
 }
 
-.td-left-div {
+.float-left {
   float: left;
 }
-.td-input-div {
-  float: left;
+
+.float-right {
+  float: right;
+}
+.pad-left {
   padding-left: 10px;
 }
 
 .td-text-div {
-  float: left;
-  padding-left: 10px;
   padding-top: 4px;
 }
 
@@ -49,4 +50,16 @@ input {
   padding-right: 0px;
 }
 
+.win-container {
+  width: 10em;
+}
+
+.clear-div {
+  clear: both;
+}
+
+.ttest-title {
+  text-align: left;
+  padding-left: 6em;
+}
 

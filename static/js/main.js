@@ -8,7 +8,7 @@ $(document).on('click','.navbar-collapse.in',function(e) {
 var API_URL = "http://andr3w321.pythonanywhere.com";
 
 function isNumeric(num) {
-    return !isNaN(num)
+    return !isNaN(num);
 }
 
 /* Odds Converter */
@@ -30,7 +30,7 @@ function convert_us_to_euro(us) {
 
 function convert_euro_to_win_per(euro) {
   var win_per = 1 / euro * 100.0;
-  return parseFloat(win_per).toFixed(2) + "%"
+  return parseFloat(win_per).toFixed(2) + "%";
 }
 
 function convert_win_per_to_euro(win_per) {
@@ -221,7 +221,7 @@ function setCI(confidence_level, n, proportion) {
   xhr.onerror = function (e) {
     document.getElementById('ci_t_value').innerHTML = "API Error: " + xhr.statusText;
   };
-  xhr.send(null);
+  xhr.send();
 }
 
 function calcCI() {
@@ -260,6 +260,7 @@ function setPVal(wins, losses, pop_mean) {
       setErrorText("Error parsing t_val and p_val");
     }
   }
+
   var xhr = new XMLHttpRequest();
   var url = API_URL + "/t_test/" + "wins=" + wins.toString() + "&losses=" + losses.toString() + "&pop_mean=" + pop_mean.toString();
   xhr.open("GET", url, true);
@@ -275,7 +276,7 @@ function setPVal(wins, losses, pop_mean) {
   xhr.onerror = function (e) {
     setErrorText(xhr.statusText);
   };
-  xhr.send(null);
+  xhr.send();
 }
 function calcTTest() {
   var wins = parseInt(document.getElementsByName('ttest_wins')[0].value);

@@ -22,7 +22,7 @@ def index():
 
 @get('/static/js/<filename:re:.*\.js>')
 def javascripts(filename):
-    return static_file(filename, root='./static/js')
+    return static_file(filename, root='static/js')
 
 @get('/static/css/<filename:re:.*\.css>')
 def stylesheets(filename):

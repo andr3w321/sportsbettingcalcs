@@ -71,9 +71,9 @@
           </thead>
           <tbody>
             <tr><td class="right-align">Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this, 'roi_us_odds');" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
-            <tr><td class="right-align">Win %:</td><td><input name="roi_win_per" onchange="calcRoiFromWinPer(this);" /></td></tr>
-            <tr><td class="right-align">ROI:</td><td><input name="roi_roi" onchange="calcWinPerFromRoi(this);" /></td></tr>
-            <tr><td></td><td><button type="button" class="btn btn-primary">Calculate</button></td></tr>
+            <tr><td class="right-align">Win %:</td><td><input name="roi_win_per" onchange="formatPercent(this);" /></td></tr>
+            <tr><td class="right-align">ROI:</td><td><input name="roi_roi" onchange="formatPercent(this);" /></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcRoi();">Calculate</button></td></tr>
           </tbody>
         </table>
       </form>

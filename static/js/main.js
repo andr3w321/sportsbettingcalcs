@@ -92,20 +92,37 @@ function showUSOdds(inputField, outputField) {
   document.getElementById(outputField).innerHTML = "(" + prettifyUsOdds(convert_euro_to_us(inputField.value)) + ")";
 }
 
-function calcRoiFromWinPer(inputField) {
- var win_per = parseFloat(inputField.value) / 100.0;
- var euro_odds = document.getElementsByName('roi_euro_odds')[0].value;
- var roi = win_per * euro_odds - 1;
- document.getElementsByName('roi_roi')[0].value = parseFloat(roi * 100.0).toFixed(2) + "%";
- inputField.value = parseFloat(win_per * 100.0).toFixed(2) + "%";
+function formatPercent(inputField) {
+  if(inputField.value) {
+    inputField.value = parseFloat(inputField.value).toFixed(2) + "%";
+  }
 }
 
-function calcWinPerFromRoi(inputField) {
-  var roi = parseFloat(inputField.value) / 100.0;
-  var euro_odds = document.getElementsByName('roi_euro_odds')[0].value;
+function calcRoiFromWinPer(euro_odds, win_per) {
+  win_per = win_per / 100.0;
+  var roi = win_per * euro_odds - 1;
+  document.getElementsByName('roi_roi')[0].value = parseFloat(roi * 100.0).toFixed(2) + "%";
+  document.getElementsByName('roi_win_per')[0].value = parseFloat(win_per * 100.0).toFixed(2) + "%";
+}
+
+function calcWinPerFromRoi(euro_odds, roi) {
+  roi = roi / 100.0;
   var win_per = (roi + 1) / euro_odds;
   document.getElementsByName('roi_win_per')[0].value = parseFloat(win_per * 100.0).toFixed(2) + "%";
-  inputField.value = parseFloat(roi * 100.0).toFixed(2) + "%";
+  document.getElementsByName('roi_roi')[0].value = parseFloat(roi * 100.0).toFixed(2) + "%";
+}
+
+function calcRoi() {
+  var euro_odds = parseFloat(document.getElementsByName('roi_euro_odds')[0].value);
+  var roi_win_per = parseFloat(document.getElementsByName('roi_win_per')[0].value);
+  var roi_roi = parseFloat(document.getElementsByName('roi_roi')[0].value);
+
+  if(euro_odds && roi_win_per && !roi_roi) {
+    calcRoiFromWinPer(euro_odds, roi_win_per);
+  } else if (euro_odds && roi_roi && !roi_win_per) {
+    calcWinPerFromRoi(euro_odds, roi_roi);
+  }
+  // TODO calc euro odds from win per and roi
 }
 
 /* Kelly Calculator */

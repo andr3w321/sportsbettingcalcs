@@ -6,6 +6,7 @@ $(document).on('click','.navbar-collapse.in',function(e) {
 });
 
 var API_URL = "http://andr3w321.pythonanywhere.com";
+//var API_URL = "http://localhost:8080";
 
 function isNumeric(num) {
     return !isNaN(num);
@@ -13,7 +14,7 @@ function isNumeric(num) {
 
 /* Odds Converter */
 function convert_euro_to_us(euro) {
-  if(euro > 2)
+  if(euro >= 2)
     var us = 100 * (euro - 1);
   else
     var us = -100 / (euro - 1);
@@ -206,6 +207,44 @@ function calcVigFree() {
     document.getElementById('vigfree_vig').innerHTML = parseFloat(vig * 100.0).toFixed(2) + "%";
   }
 }
+
+/* Hedge Calculator */
+function calcHedge() {
+  var teama_amount_bet = parseFloat(document.getElementsByName('hedge_teama_amount_bet')[0].value);
+  var teamb_amount_bet = parseFloat(document.getElementsByName('hedge_teamb_amount_bet')[0].value);
+  var teama_euro_odds = parseFloat(document.getElementsByName('hedge_teama_euro_odds')[0].value);
+  var teamb_euro_odds = parseFloat(document.getElementsByName('hedge_teamb_euro_odds')[0].value);
+
+  var teama_to_win = teama_amount_bet * (teama_euro_odds - 1);
+  var teamb_to_win = teamb_amount_bet * (teamb_euro_odds - 1);
+  document.getElementById('hedge_teama_to_win').innerHTML = parseFloat(teama_to_win).toFixed(4);
+  document.getElementById('hedge_teamb_to_win').innerHTML = parseFloat(teamb_to_win).toFixed(4);
+
+  var teama_net_result = teama_to_win - teamb_amount_bet;
+  var teamb_net_result = teamb_to_win - teama_amount_bet;
+  document.getElementById('hedge_teama_net_result').innerHTML = parseFloat(teama_net_result).toFixed(4);
+  document.getElementById('hedge_teamb_net_result').innerHTML = parseFloat(teamb_net_result).toFixed(4);
+
+  calcHedgeEV();
+
+}
+
+function calcHedgeEV() {
+  var teama_true_win_per = parseFloat(document.getElementsByName('hedge_teama_true_win_per')[0].value);
+  var teamb_true_win_per = parseFloat(document.getElementsByName('hedge_teamb_true_win_per')[0].value);
+
+  var teama_net_result = parseFloat(document.getElementById('hedge_teama_net_result').innerHTML);
+  var teamb_net_result = parseFloat(document.getElementById('hedge_teamb_net_result').innerHTML);
+
+  var ev = (teama_true_win_per * teama_net_result + teamb_true_win_per * teamb_net_result) / 100.0;
+  document.getElementById('hedge_ev').innerHTML = parseFloat(ev).toFixed(4);
+}
+
+function setHedgeTrueWinPerFields(inputField, outputField) {
+  inputField.value = parseFloat(inputField.value).toFixed(2) + '%';
+  document.getElementsByName(outputField)[0].value = (100.0 - parseFloat(inputField.value)).toFixed(2) + '%';
+}
+
 
 /* Confidence Interval Calculator */
 function setCI(confidence_level, n, proportion) {

@@ -35,6 +35,7 @@
             <li><a href="#roi_calculator">ROI Calculator</a></li>
             <li><a href="#kelly_calculator">Kelly Criterion</a></li>
             <li><a href="#vigfree_calculator">Vig Free Line</a></li>
+            <li><a href="#hedge_calculator">Hedge</a></li>
             <li><a href="#ci_calculator">Confidence Interval</a></li>
             <li><a href="#ttest_calculator">T-Test</a></li>
           </ul>
@@ -119,6 +120,27 @@
       <hr>
       </section>
 
+      <section id="hedge_calculator" class="nav-link">
+      <form action="" method="get">
+        <table>
+          <thead>
+            <tr><th colspan="3" align="center">Hedge Calculator</th></tr>
+          </thead>
+          <tbody>
+            <tr><td></td><td>Team A</td><td>Team B</td></tr>
+            <tr><td class="right-align">Amount Bet:</td><td><input name="hedge_teama_amount_bet" value="50.00" /></td><td><input name="hedge_teamb_amount_bet" value="205.00" /></td></tr>
+            <tr><td class="right-align">Decimal Odds:</td><td><input name="hedge_teama_euro_odds" onchange="this.value = prettifyEuroOdds(this.value);" value="8.00" /></td><td><input name="hedge_teamb_euro_odds" onchange="this.value = prettifyEuroOdds(this.value);" value="1.95" /></td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcHedge();">Calculate</button></td></tr>
+            <tr><td class="right-align">To Win:</td><td><div id="hedge_teama_to_win"></div></td><td><div id="hedge_teamb_to_win"></div></td></tr>
+            <tr><td class="right-align">Net Result:</td><td><div id="hedge_teama_net_result"></div></td><td><div id="hedge_teamb_net_result"></div></td></tr>
+            <tr><td class="right-align">True Win %:</td><td><input name="hedge_teama_true_win_per" onchange="setHedgeTrueWinPerFields(this, 'hedge_teamb_true_win_per');calcHedgeEV();" value="50.0%" /></td><td><input name="hedge_teamb_true_win_per" onchange="setHedgeTrueWinPerFields(this, 'hedge_teama_true_win_per');calcHedgeEV();" value="50.0%" /></td></tr>
+            <tr><td class="right-align">EV:</td><td><div id="hedge_ev"></div></td></tr>
+          </tbody>
+        </table>
+      </form>
+      <hr>
+      </section>
+
       <section id="ci_calculator" class="nav-link">
       <form action="" method="get">
         <table>
@@ -177,6 +199,7 @@
         </table>
       </form>
       </section>
+
     </div><!-- end main div -->
     </div><!-- end row div -->
     </div><!-- end container div -->

@@ -12,6 +12,12 @@ function isNumeric(num) {
     return !isNaN(num);
 }
 
+function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
+
 /* Odds Converter */
 function convert_euro_to_us(euro) {
   if(euro >= 2)
@@ -217,15 +223,16 @@ function calcHedge() {
 
   var teama_to_win = teama_amount_bet * (teama_euro_odds - 1);
   var teamb_to_win = teamb_amount_bet * (teamb_euro_odds - 1);
-  document.getElementById('hedge_teama_to_win').innerHTML = parseFloat(teama_to_win).toFixed(4);
-  document.getElementById('hedge_teamb_to_win').innerHTML = parseFloat(teamb_to_win).toFixed(4);
+  document.getElementById('hedge_teama_to_win').innerHTML = numberWithCommas(parseFloat(teama_to_win).toFixed(4));
+  document.getElementById('hedge_teamb_to_win').innerHTML = numberWithCommas(parseFloat(teamb_to_win).toFixed(4));
 
   var teama_net_result = teama_to_win - teamb_amount_bet;
   var teamb_net_result = teamb_to_win - teama_amount_bet;
-  document.getElementById('hedge_teama_net_result').innerHTML = parseFloat(teama_net_result).toFixed(4);
-  document.getElementById('hedge_teamb_net_result').innerHTML = parseFloat(teamb_net_result).toFixed(4);
+  document.getElementById('hedge_teama_net_result').innerHTML = numberWithCommas(parseFloat(teama_net_result).toFixed(4));
+  document.getElementById('hedge_teamb_net_result').innerHTML = numberWithCommas(parseFloat(teamb_net_result).toFixed(4));
 
   calcHedgeEV();
+  calcHedgeEG();
 
 }
 
@@ -233,16 +240,56 @@ function calcHedgeEV() {
   var teama_true_win_per = parseFloat(document.getElementsByName('hedge_teama_true_win_per')[0].value);
   var teamb_true_win_per = parseFloat(document.getElementsByName('hedge_teamb_true_win_per')[0].value);
 
-  var teama_net_result = parseFloat(document.getElementById('hedge_teama_net_result').innerHTML);
-  var teamb_net_result = parseFloat(document.getElementById('hedge_teamb_net_result').innerHTML);
+  var teama_net_result = parseFloat(document.getElementById('hedge_teama_net_result').innerHTML.replace(',',''));
+  var teamb_net_result = parseFloat(document.getElementById('hedge_teamb_net_result').innerHTML.replace(',',''));
 
   var ev = (teama_true_win_per * teama_net_result + teamb_true_win_per * teamb_net_result) / 100.0;
-  document.getElementById('hedge_ev').innerHTML = parseFloat(ev).toFixed(4);
+  document.getElementById('hedge_ev').innerHTML = numberWithCommas(parseFloat(ev).toFixed(4));
 }
 
 function setHedgeTrueWinPerFields(inputField, outputField) {
   inputField.value = parseFloat(inputField.value).toFixed(2) + '%';
   document.getElementsByName(outputField)[0].value = (100.0 - parseFloat(inputField.value)).toFixed(2) + '%';
+}
+
+function calcHedgeEG() {
+
+  var teama_amount_bet = parseFloat(document.getElementsByName('hedge_teama_amount_bet')[0].value.replace(',',''));
+  var teamb_amount_bet = parseFloat(document.getElementsByName('hedge_teamb_amount_bet')[0].value.replace(',',''));
+  var teama_euro_odds = parseFloat(document.getElementsByName('hedge_teama_euro_odds')[0].value);
+  var teamb_euro_odds = parseFloat(document.getElementsByName('hedge_teamb_euro_odds')[0].value);
+
+  var teama_to_win = teama_amount_bet * (teama_euro_odds - 1);
+  var teamb_to_win = teamb_amount_bet * (teamb_euro_odds - 1);
+
+  var teama_true_win_per = parseFloat(document.getElementsByName('hedge_teama_true_win_per')[0].value) / 100.0;
+  var teamb_true_win_per = parseFloat(document.getElementsByName('hedge_teamb_true_win_per')[0].value) / 100.0;
+
+  var teama_net_result = parseFloat(document.getElementById('hedge_teama_net_result').innerHTML.replace(',',''));
+  var teamb_net_result = parseFloat(document.getElementById('hedge_teamb_net_result').innerHTML.replace(',',''));
+
+  var starting_bankroll = parseFloat(document.getElementsByName('hedge_starting_bankroll')[0].value.replace(",",""));
+
+  var eg = (Math.pow((1 + (teama_net_result / starting_bankroll)), teama_true_win_per) * Math.pow((1 + (teamb_net_result / starting_bankroll)), teamb_true_win_per) - 1.0) * 100.0;
+
+  document.getElementById('hedge_eg').innerHTML = parseFloat(eg).toFixed(4) + "%";
+
+  // solve for optimum team b bet amount lazily by trying every bet amount for br / 10000
+  optimum_teamb_bet_amount = 0;
+  max_eg = 0;
+  for (var tmp_teamb_bet_amount = 0; tmp_teamb_bet_amount <= starting_bankroll; tmp_teamb_bet_amount += starting_bankroll / 10000.0) {
+    tmp_teama_net_result = teama_amount_bet * (teama_euro_odds - 1) - tmp_teamb_bet_amount;
+    tmp_teamb_net_result = tmp_teamb_bet_amount * (teamb_euro_odds - 1) - teama_amount_bet;
+
+    tmp_eg = (Math.pow((1 + (tmp_teama_net_result / starting_bankroll)), teama_true_win_per) * Math.pow((1 + (tmp_teamb_net_result / starting_bankroll)), teamb_true_win_per) - 1.0) * 100.0;
+    if (tmp_eg > max_eg) {
+      max_eg = tmp_eg;
+      optimum_teamb_bet_amount = tmp_teamb_bet_amount;
+    }
+  }
+  document.getElementById('hedge_optimum_teamb_bet_amount').innerHTML = numberWithCommas(parseFloat(optimum_teamb_bet_amount).toFixed(4));
+  
+
 }
 
 

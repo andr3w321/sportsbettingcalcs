@@ -134,7 +134,10 @@
             <tr><td class="right-align">To Win:</td><td><div id="hedge_teama_to_win"></div></td><td><div id="hedge_teamb_to_win"></div></td></tr>
             <tr><td class="right-align">Net Result:</td><td><div id="hedge_teama_net_result"></div></td><td><div id="hedge_teamb_net_result"></div></td></tr>
             <tr><td class="right-align">True Win %:</td><td><input name="hedge_teama_true_win_per" onchange="setHedgeTrueWinPerFields(this, 'hedge_teamb_true_win_per');calcHedgeEV();" value="50.0%" /></td><td><input name="hedge_teamb_true_win_per" onchange="setHedgeTrueWinPerFields(this, 'hedge_teama_true_win_per');calcHedgeEV();" value="50.0%" /></td></tr>
-            <tr><td class="right-align">EV:</td><td><div id="hedge_ev"></div></td></tr>
+            <tr><td class="right-align">Expected Value:</td><td><div id="hedge_ev"></div></td></tr>
+            <tr><td class="right-align">Starting Bankroll:</td><td><input name="hedge_starting_bankroll" onchange="this.value = numberWithCommas(this.value);calcHedgeEG();" value="10,000.00" /></td></tr>
+            <tr><td class="right-align">Expected Growth:</td><td><div id="hedge_eg"></div></td></tr>
+            <tr><td class="right-align">Optimum Team B Bet Amount:</td><td><div id="hedge_optimum_teamb_bet_amount"></div></td></tr>
           </tbody>
         </table>
       </form>

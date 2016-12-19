@@ -1,4 +1,4 @@
-from bottle import route, run, template, static_file, url, get, response, request
+from bottle import route, run, template, static_file, url, get, response, request, redirect
 from scipy.stats import t
 from scipy.stats import ttest_1samp
 
@@ -19,6 +19,14 @@ def enable_cors(fn):
 @route('/')
 def index():
     return static_file('index.html', root='./static')
+
+@route('/odds-comparison')
+def odds_comparison():
+    return static_file('odds-comparison.html', root='./static')
+
+@route('/odds')
+def odds():
+    redirect('/odds-comparison')
 
 @get('/static/js/<filename:re:.*\.js>')
 def javascripts(filename):

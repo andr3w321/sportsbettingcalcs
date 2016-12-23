@@ -95,8 +95,9 @@ function convertOdds(inputField) {
 
 
 /* ROI Calculator */
-function showUSOdds(inputField, outputField) {
-  document.getElementById(outputField).innerHTML = "(" + prettifyUsOdds(convert_euro_to_us(inputField.value)) + ")";
+function showEuroOdds(inputField, outputField) {
+  document.getElementById(outputField).innerHTML = "(" + prettifyEuroOdds(convert_us_to_euro(inputField.value)) + ")";
+  inputField.value = prettifyUsOdds(inputField.value);
 }
 
 function formatPercent(inputField) {
@@ -120,23 +121,25 @@ function calcWinPerFromRoi(euro_odds, roi) {
 }
 
 function calcRoi() {
-  var euro_odds = parseFloat(document.getElementsByName('roi_euro_odds')[0].value);
+  var us_odds = parseFloat(document.getElementsByName('roi_us_odds')[0].value);
   var roi_win_per = parseFloat(document.getElementsByName('roi_win_per')[0].value);
   var roi_roi = parseFloat(document.getElementsByName('roi_roi')[0].value);
+  var euro_odds = convert_us_to_euro(us_odds);
 
-  if(euro_odds && roi_win_per && !roi_roi) {
+  if(us_odds && roi_win_per && !roi_roi) {
     calcRoiFromWinPer(euro_odds, roi_win_per);
-  } else if (euro_odds && roi_roi && !roi_win_per) {
+  } else if (us_odds && roi_roi && !roi_win_per) {
     calcWinPerFromRoi(euro_odds, roi_roi);
   }
-  // TODO calc euro odds from win per and roi
+  // TODO calc us odds from win per and roi
 }
 
 /* Kelly Calculator */
 function calcKelly() {
   var multiplier = parseFloat(document.getElementsByName('kelly_multiplier')[0].value);
-  var euro_odds = parseFloat(document.getElementsByName('kelly_euro_odds')[0].value);
+  var us_odds = parseFloat(document.getElementsByName('kelly_us_odds')[0].value);
   var win_per = parseFloat(document.getElementsByName('kelly_win_per')[0].value) / 100.0;
+  var euro_odds = convert_us_to_euro(us_odds);
   if (isNumeric(multiplier) && isNumeric(euro_odds) && isNumeric(win_per)) {
     var b = euro_odds - 1;
     var p = win_per;
@@ -218,8 +221,8 @@ function calcVigFree() {
 function calcHedge() {
   var teama_amount_bet = parseFloat(document.getElementsByName('hedge_teama_amount_bet')[0].value);
   var teamb_amount_bet = parseFloat(document.getElementsByName('hedge_teamb_amount_bet')[0].value);
-  var teama_euro_odds = parseFloat(document.getElementsByName('hedge_teama_euro_odds')[0].value);
-  var teamb_euro_odds = parseFloat(document.getElementsByName('hedge_teamb_euro_odds')[0].value);
+  var teama_euro_odds = convert_us_to_euro(parseFloat(document.getElementsByName('hedge_teama_us_odds')[0].value));
+  var teamb_euro_odds = convert_us_to_euro(parseFloat(document.getElementsByName('hedge_teamb_us_odds')[0].value));
 
   var teama_to_win = teama_amount_bet * (teama_euro_odds - 1);
   var teamb_to_win = teamb_amount_bet * (teamb_euro_odds - 1);
@@ -256,8 +259,8 @@ function calcHedgeEG() {
 
   var teama_amount_bet = parseFloat(document.getElementsByName('hedge_teama_amount_bet')[0].value.replace(',',''));
   var teamb_amount_bet = parseFloat(document.getElementsByName('hedge_teamb_amount_bet')[0].value.replace(',',''));
-  var teama_euro_odds = parseFloat(document.getElementsByName('hedge_teama_euro_odds')[0].value);
-  var teamb_euro_odds = parseFloat(document.getElementsByName('hedge_teamb_euro_odds')[0].value);
+  var teama_euro_odds = convert_us_to_euro(parseFloat(document.getElementsByName('hedge_teama_us_odds')[0].value));
+  var teamb_euro_odds = convert_us_to_euro(parseFloat(document.getElementsByName('hedge_teamb_us_odds')[0].value));
 
   var teama_to_win = teama_amount_bet * (teama_euro_odds - 1);
   var teamb_to_win = teamb_amount_bet * (teamb_euro_odds - 1);

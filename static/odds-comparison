@@ -26,7 +26,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <div class="hidden-sm"><a class="navbar-brand" href="#">SportsBettingCalcs</a></div>
+          <div class="hidden-sm"><a class="navbar-brand" href="/">SportsBettingCalcs</a></div>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -38,6 +38,7 @@
             <li><a href="#mlb">MLB</a></li>
             <li><a href="#wnba">WNBA</a></li>
             <li><a href="#nhl">NHL</a></li>
+            <li><a href="/">Calculators</a></li>
           </ul>
         </div>
       </div>

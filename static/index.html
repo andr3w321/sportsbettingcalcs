@@ -71,7 +71,7 @@
             <tr><th colspan="2" align="center">ROI Calculator</th></tr>
           </thead>
           <tbody>
-            <tr><td class="right-align">Decimal Odds:</td><td><input name="roi_euro_odds" onchange="showUSOdds(this, 'roi_us_odds');" value="1.9091"/></td><td><div id="roi_us_odds">(-110.00)</div></td></tr>
+            <tr><td class="right-align">US Odds:</td><td><input name="roi_us_odds" onchange="showEuroOdds(this, 'roi_euro_odds');" value="-110.00"/></td><td><div id="roi_euro_odds">(1.9091)</div></td></tr>
             <tr><td class="right-align">Win %:</td><td><input name="roi_win_per" onchange="formatPercent(this);" /></td></tr>
             <tr><td class="right-align">ROI:</td><td><input name="roi_roi" onchange="formatPercent(this);" /></td></tr>
             <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcRoi();">Calculate</button></td></tr>
@@ -89,7 +89,7 @@
           </thead>
           <tbody>
           <tr><td class="right-align">Kelly Multiplier:</td><td colspan="2"><div class="float-left"><input name="kelly_multiplier" class="small-input" onchange="calcKelly();" value="1.0" /></div><div class="float-left pad-left td-text-div hidden-xs">(1.0 is Full Kelly, 0.25 is 1/4 Kelly)</div></td></tr>
-          <tr><td class="right-align">Decimal Odds:</td><td class="td-kelly-euro-odds"><input name="kelly_euro_odds" onchange="showUSOdds(this, 'kelly_us_odds');calcKelly();" value="1.9091"/></td><td><div id="kelly_us_odds">(-110.00)</div></td></tr>
+          <tr><td class="right-align">US Odds:</td><td class="td-kelly-us-odds"><input name="kelly_us_odds" onchange="showEuroOdds(this, 'kelly_euro_odds');calcKelly();" value="-110.00"/></td><td><div id="kelly_euro_odds">(1.9091)</div></td></tr>
             <tr><td class="right-align">Win %:</td><td><input name="kelly_win_per" onchange="calcKelly();" value="55.00%" /></td></tr>
             <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcKelly();">Calculate</button></td></tr>
             <tr><td class="right-align">Fraction of Bankroll to Wager:</td><td><div id="kelly_fraction"></div></td></tr>
@@ -129,7 +129,7 @@
           <tbody>
             <tr><td></td><td>Team A</td><td>Team B</td></tr>
             <tr><td class="right-align">Amount Bet:</td><td><input name="hedge_teama_amount_bet" value="50.00" /></td><td><input name="hedge_teamb_amount_bet" value="205.00" /></td></tr>
-            <tr><td class="right-align">Decimal Odds:</td><td><input name="hedge_teama_euro_odds" onchange="this.value = prettifyEuroOdds(this.value);" value="8.00" /></td><td><input name="hedge_teamb_euro_odds" onchange="this.value = prettifyEuroOdds(this.value);" value="1.95" /></td></tr>
+            <tr><td class="right-align">US Odds:</td><td><input name="hedge_teama_us_odds" onchange="this.value = prettifyUsOdds(this.value);" value="700.00" /></td><td><input name="hedge_teamb_us_odds" onchange="this.value = prettifyUsOdds(this.value);" value="-110.00" /></td></tr>
             <tr><td></td><td><button type="button" class="btn btn-primary" onclick="calcHedge();">Calculate</button></td></tr>
             <tr><td class="right-align">To Win:</td><td><div id="hedge_teama_to_win"></div></td><td><div id="hedge_teamb_to_win"></div></td></tr>
             <tr><td class="right-align">Net Result:</td><td><div id="hedge_teama_net_result"></div></td><td><div id="hedge_teamb_net_result"></div></td></tr>

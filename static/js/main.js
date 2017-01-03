@@ -398,4 +398,212 @@ function calcTTest() {
   }
 }
 
+/* Bet Simulator */
+function updateBetSimInput() {
+  var average_us_odds = parseFloat(document.getElementsByName('betsim_average_us_odds')[0].value);
+  var roi = parseFloat(document.getElementsByName('betsim_roi')[0].value);
+  var to_win = parseFloat(document.getElementsByName('betsim_to_win')[0].value.replace(',',''));
+  var betsize_type = document.getElementsByName('betsim_betsize_type')[0].value;
+  var average_euro_odds = convert_us_to_euro(average_us_odds);
+  // calculate and update winrate
+  var win_per = (roi / 100.0 + 1) / average_euro_odds;
+  document.getElementById('betsim_winrate').innerHTML = "(" + parseFloat(win_per * 100.0).toFixed(2) + "% winrate)";
+
+  // calculate and update betsize
+  if (average_us_odds >= 100) {
+    var betsize = to_win * 100.0 / average_us_odds;
+  } else {
+    var betsize = to_win * -1.0 * average_us_odds / 100.0;
+  }
+  if (betsize_type == "Variable") {
+    formatPercent(document.getElementsByName('betsim_to_win')[0]);
+    betsize = parseFloat(betsize).toFixed(2) + "% to win";
+  } else {
+    document.getElementsByName('betsim_to_win')[0].value = numberWithCommas(to_win.toFixed(2));
+    betsize = parseFloat(betsize).toFixed(2) + " to win";
+  }
+  document.getElementById('betsim_betsize').innerHTML = betsize;
+}
+
+function updatePerBRLabel(inputField) {
+  if(inputField.value) {
+    document.getElementById('betsim_per_br_label').innerHTML = 'Chance of ' + inputField.value + ' loss:';
+  }
+}
+
+function setDefaultBetSimBetsize() {
+  var betsize_type = document.getElementsByName('betsim_betsize_type')[0].value;
+  if (betsize_type == "Variable") {
+    document.getElementsByName('betsim_to_win')[0].value = "2.00%";
+  } else {
+    document.getElementsByName('betsim_to_win')[0].value = "200.00";
+  }
+}
+
+function average( dataArray ) {
+    var sum = 0;
+    var count = dataArray.length;
+    for (i=0; i < count; i++ ) {
+        sum += dataArray[i];
+    }
+    return sum / count;
+}
+
+function standardDeviation(values){
+  var avg = average(values);
+  
+  var squareDiffs = values.map(function(value){
+    var diff = value - avg;
+    var sqrDiff = diff * diff;
+    return sqrDiff;
+  });
+  
+  var avgSquareDiff = average(squareDiffs);
+
+  var stdDev = Math.sqrt(avgSquareDiff);
+  return stdDev;
+}
+
+// calculate betsize from to_win amount and average_us_odds
+function calcBetSize(to_win, average_us_odds) {
+  if (average_us_odds >= 100) {
+    var betsize = to_win * 100.0 / average_us_odds;
+  } else {
+    var betsize = to_win * -1.0 * average_us_odds / 100.0;
+  }
+  return betsize;
+}
+
+function betSimulate() {
+  var starting_bankroll = parseFloat(document.getElementsByName('betsim_starting_bankroll')[0].value.replace(",",""));
+  var average_us_odds = parseFloat(document.getElementsByName('betsim_average_us_odds')[0].value);
+  var roi = parseFloat(document.getElementsByName('betsim_roi')[0].value);
+  var nbets = parseInt(document.getElementsByName('betsim_nbets')[0].value.replace(",",""));
+  var to_win = parseFloat(document.getElementsByName('betsim_to_win')[0].value.replace(',','').replace('%',''));
+  var betsize_type = document.getElementsByName('betsim_betsize_type')[0].value;
+  var per_br_input = parseFloat(document.getElementsByName('betsim_per_br_input')[0].value.replace(',','').replace('%',''));
+  var low_br_cutoff = starting_bankroll - starting_bankroll * per_br_input / 100.0;
+  var win_per = (roi / 100.0 + 1) / convert_us_to_euro(average_us_odds);
+  var betsize = calcBetSize(to_win, average_us_odds);
+
+  var ntrials = 10000;
+  var ending_bankrolls = Array(ntrials);
+  var losses = 0;
+  var large_drawdowns = 0;
+  var chart_data = Array(20);
+  for(var i=0; i<20; i++) {
+    chart_data[i] = [{x:0,y:starting_bankroll}];
+  }
+  for(var i=0; i<ntrials; i++) {
+    var tmp_bankroll = starting_bankroll;
+    var tmp_to_win = to_win;
+    var tmp_betsize = betsize;
+    var low_bankroll = false;
+    for(var j=0; j<nbets; j++) {
+      // If betsize is variable, calculate a new betsize before each bet
+      if (betsize_type == "Variable") {
+        tmp_to_win = to_win / 100.0 * tmp_bankroll;
+        tmp_betsize = calcBetSize(tmp_to_win, average_us_odds);
+      }
+      // Randomly decide if it was a win or not
+      if (Math.random() < win_per) {
+        // win
+        tmp_bankroll += tmp_to_win;
+      } else {
+        // loss
+        tmp_bankroll -= tmp_betsize;
+        if (tmp_bankroll < 0) {
+          tmp_bankroll = 0;
+        }
+      }
+      if(i<20) {
+        chart_data[i].push({x:j+1,y:tmp_bankroll});
+      }
+      if(tmp_bankroll <= low_br_cutoff) {
+        low_bankroll = true;
+      }
+    }
+    ending_bankrolls[i] = tmp_bankroll;
+    if (tmp_bankroll < starting_bankroll) {
+      losses += 1;
+    }
+    if (low_bankroll == true) {
+      large_drawdowns += 1;
+    }
+  }
+
+  var average_ending_bankroll = average(ending_bankrolls);
+  document.getElementById("betsim_avg_ending_bankroll").innerHTML = numberWithCommas(parseFloat(average_ending_bankroll).toFixed(2));
+  document.getElementById("betsim_chance_of_loss").innerHTML = parseFloat(losses * 100.0 / ntrials).toFixed(2) + "%";
+  document.getElementById("betsim_chance_of_large_drawdown").innerHTML = parseFloat(large_drawdowns * 100.0 / ntrials).toFixed(2) + "%";
+  // javascript sort sorts array in place
+  ending_bankrolls.sort(function(a, b){return a - b});
+  document.getElementById("betsim_std_dev").innerHTML = numberWithCommas(parseFloat(standardDeviation(ending_bankrolls)).toFixed(2));
+  var seventy_ci_low = ending_bankrolls[parseInt(ntrials * 0.3 - 1)]
+  var seventy_ci_high = ending_bankrolls[parseInt(ntrials * 0.7 - 1)]
+  var ninetyfive_ci_low = ending_bankrolls[parseInt(ntrials * 0.05 - 1)]
+  var ninetyfive_ci_high = ending_bankrolls[parseInt(ntrials * 0.95 - 1)]
+  document.getElementById("betsim_seventy_ci").innerHTML = numberWithCommas(seventy_ci_low.toFixed(2)) + "-" + numberWithCommas(seventy_ci_high.toFixed(2));
+  document.getElementById("betsim_ninetyfive_ci").innerHTML = numberWithCommas(ninetyfive_ci_low.toFixed(2)) + "-" + numberWithCommas(ninetyfive_ci_high.toFixed(2));
+  /*
+  output
+  20 sample graph
+  Could also look at downswings
+  */
+  var default_colors = ['#3366CC','#DC3912','#FF9900','#109618','#990099','#3B3EAC','#0099C6','#DD4477','#66AA00','#B82E2E','#316395','#994499','#22AA99','#AAAA11','#6633CC','#E67300','#8B0707','#329262','#5574A6','#3B3EAC']
+  // Add samples lines
+  for(var i=0; i<20; i++) {
+    betsimChart.data.datasets[i] = {
+                label: (i + 1).toString(),
+                fill: false,
+                borderColor: default_colors[i],
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: chart_data[i]};
+  }
+  // Add average ending bankroll
+  betsimChart.data.datasets[20] = {
+                label: 'Average Ending Bankroll',
+                fill: false,
+                borderColor: '#000000',
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: [{x:0,y:starting_bankroll},{x:nbets,y:average_ending_bankroll}]};
+  betsimChart.data.datasets[21] = {
+                label: '70% CI Low',
+                fill: false,
+                borderColor: '#708090',
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: [{x:0,y:starting_bankroll},{x:nbets,y:seventy_ci_low}]};
+  betsimChart.data.datasets[22] = {
+                label: '70% CI High',
+                fill: false,
+                borderColor: '#708090',
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: [{x:0,y:starting_bankroll},{x:nbets,y:seventy_ci_high}]};
+  betsimChart.data.datasets[23] = {
+                label: '95% CI Low',
+                fill: false,
+                borderColor: '#D3D3D3',
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: [{x:0,y:starting_bankroll},{x:nbets,y:ninetyfive_ci_low}]};
+  betsimChart.data.datasets[24] = {
+                label: '95% CI High',
+                fill: false,
+                borderColor: '#D3D3D3',
+                pointRadius: 0,
+                lineTension: 0,
+                borderWidth: 1,
+                data: [{x:0,y:starting_bankroll},{x:nbets,y:ninetyfive_ci_high}]};
+
+  betsimChart.update();
+}
 

@@ -26,7 +26,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <div class="hidden-sm"><a class="navbar-brand" href="#">SportsBettingCalcs</a></div>
+          <div><a class="navbar-brand" href="#">SportsBettingCalcs</a></div>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -38,6 +38,7 @@
             <li><a href="#hedge_calculator">Hedge</a></li>
             <li><a href="#ci_calculator">Confidence Interval</a></li>
             <li><a href="#ttest_calculator">T-Test</a></li>
+            <li><a href="#bet_simulator">Bet Simulator</a></li>
           </ul>
         </div>
       </div>
@@ -201,6 +202,82 @@
           </tbody>
         </table>
       </form>
+      <hr>
+      </section>
+
+      <section id="bet_simulator" class="nav-link">
+      <form action="" method="get">
+        <table>
+          <thead>
+            <tr><th colspan="3" align="center">Bet Simulator</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="right-align">Starting Bankroll:</td><td><input name="betsim_starting_bankroll" onchange="this.value = numberWithCommas(this.value);" value="10,000.00" /></td></tr>
+            <tr><td class="right-align">Average US Odds:</td><td><input name="betsim_average_us_odds" onchange="showEuroOdds(this, 'betsim_average_euro_odds');updateBetSimInput();" value="-110.00"/></td><td><div id="betsim_average_euro_odds">(1.9091)</div></td></tr>
+            <tr><td class="right-align">ROI:</td><td><input name="betsim_roi" onchange="formatPercent(this);updateBetSimInput();" value="2.00%"/></td><td><div id="betsim_winrate">(53.43% winrate)</div></td></tr>
+            <tr><td class="right-align"># of Bets:</td><td><input name="betsim_nbets" onchange="this.value = numberWithCommas(this.value);" value="500" /></td></tr>
+            <tr><td class="right-align">Bet Size:&nbsp;<select name="betsim_betsize_type" onchange="setDefaultBetSimBetsize();updateBetSimInput();"><option value="Variable">Variable</option><option value="Fixed">Fixed</option></select></td><td><div id="betsim_betsize">2.20% to win</div></td><td><input name="betsim_to_win" onchange="updateBetSimInput();" value="2.00%" /></td></tr>
+            <tr><td class="right-align">Calc chance of losing:</td><td><input name="betsim_per_br_input" onchange="formatPercent(this);updatePerBRLabel(this);" value="50.00%" /></td><td>starting bankroll</td></tr>
+            <tr><td></td><td><button type="button" class="btn btn-primary" onclick="betSimulate();">Simulate</button></td></tr>
+            <tr><td class="right-align">Avg Ending Bankroll:</td><td><div id="betsim_avg_ending_bankroll"></div></td></tr>
+            <tr><td class="right-align">Standard Deviation:</td><td><div id="betsim_std_dev"></div></td></tr>
+            <tr><td class="right-align">Chance of Loss at End:</td><td><div id="betsim_chance_of_loss"></div></td></tr>
+            <tr><td class="right-align"><div id="betsim_per_br_label">Chance of 50.00% loss:</div></td><td><div id="betsim_chance_of_large_drawdown"></div></td></tr>
+            <tr><td class="right-align">70% Confidence Interval:</td><td colspan=2><div id="betsim_seventy_ci"></div></td></tr>
+            <tr><td class="right-align">95% Confidence Interval:</td><td colspan=2><div id="betsim_ninetyfive_ci"></div></td></tr>
+        </table>
+      </form>
+
+      <canvas id="myChart" width="125" height="100"></canvas>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js"></script>
+      <script>
+      var ctx = document.getElementById("myChart");
+      var betsimChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+          },
+          options: {
+            title: {
+              display: true,
+              text: '20 Random Samples'
+            },
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Bet Number'
+                },
+                type: 'linear',
+                position: 'bottom'
+              }],
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Bankroll'
+                }
+              }]
+            },
+            legend: {
+                labels: {
+                    generateLabels: function(chart) {
+                        return [{ 
+                                text: 'Average Ending Bankroll',
+                                fillStyle: '#000000'
+                            },{
+                                text: '70% Confidence Interval',
+                                fillStyle: '#708090'
+                            },{
+                                text: '95% Confidence Interval',
+                                fillStyle: '#D3D3D3'
+                            }
+                        ]
+                    }    
+                }
+            }
+          }
+      });
+      </script>
+      <hr>
       </section>
 
     </div><!-- end main div -->

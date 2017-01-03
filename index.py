@@ -22,11 +22,15 @@ def index():
 
 @route('/odds-comparison')
 def odds_comparison():
-    return static_file('odds-comparison.html', root='./static')
+    return static_file('odds-comparison', root='./static')
 
 @route('/odds')
 def odds():
     redirect('/odds-comparison')
+
+@route('/bet-simulator')
+def bet_simulator():
+    return static_file('bet-simulator', root='./static')
 
 @get('/static/js/<filename:re:.*\.js>')
 def javascripts(filename):
